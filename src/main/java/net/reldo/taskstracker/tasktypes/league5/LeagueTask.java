@@ -10,20 +10,18 @@ import net.runelite.client.game.SpriteManager;
 
 public class LeagueTask extends Task
 {
-	// Basic constructor for backward compatibility
 	public LeagueTask(int id, String name, String description, String tier, int clientSortId)
 	{
 		super(id, name, description, tier, clientSortId);
 	}
 
-	// Full constructor with all fields
 	public LeagueTask(int id, String name, String description, String tier, int clientSortId, 
 			WorldPosition worldPosition, String[] requiredItems, String npc)
 	{
 		super(id, name, description, tier, clientSortId);
 		this.setWorldPosition(worldPosition);
 		this.setRequiredItems(requiredItems);
-		this.setNPC(npc);
+		this.setNpc(npc);
 	}
 
 	@Override

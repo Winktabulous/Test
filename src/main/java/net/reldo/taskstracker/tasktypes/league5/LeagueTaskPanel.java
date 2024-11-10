@@ -74,10 +74,10 @@ public class LeagueTaskPanel extends TaskPanel
 		}
 
 		// NPC if available
-		if (task.getNPC() != null && !task.getNPC().isEmpty()) {
+		if (task.getNpc() != null && !task.getNpc().isEmpty()) {
 			tooltip.append(Util.HTML_LINE_BREAK).append(Util.HTML_LINE_BREAK)
 				.append(Util.wrapWithBold("NPC: "))
-				.append(task.getNPC());
+				.append(task.getNpc());
 		}
 
 		return Util.wrapWithHtml(Util.wrapWithWrappingParagraph(tooltip.toString(), 200));

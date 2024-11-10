@@ -1,11 +1,7 @@
 package net.reldo.taskstracker;
 
-import com.google.common.base.MoreObjects;
 import com.google.inject.Provides;
-
 import javax.inject.Inject;
-
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,21 +13,14 @@ import net.reldo.taskstracker.tasktypes.TaskManager;
 import net.reldo.taskstracker.tasktypes.TaskType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.NPC;
-import net.runelite.api.NPCComposition;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.events.NpcChanged;
-import net.runelite.api.events.NpcSpawned;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.PluginMessage;
 import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.game.SpriteManager;
-import net.runelite.client.game.npcoverlay.HighlightedNpc;
-import net.runelite.client.game.npcoverlay.NpcOverlayService;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -40,344 +29,238 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @PluginDescriptor(
-        name = "Tasks Tracker"
+	name = "Tasks Tracker"
 )
-public class TasksTrackerPlugin extends Plugin {
+public class TasksTrackerPlugin extends Plugin
+{
+	public static final String CONFIG_GROUP_NAME = "tasksTracker";
 
-    public static final String CONFIG_GROUP_NAME = "tasksTracker";
+	@Inject
+	private Client client;
 
-    @Inject
-    private Client client;
+	@Inject
+	private ClientThread clientThread;
 
-    @Inject
-    private ClientThread clientThread;
+	@Inject
+	private ClientToolbar clientToolbar;
 
-    @Inject
-    private ClientToolbar clientToolbar;
+	@Inject
+	private SpriteManager spriteManager;
 
-    @Inject
-    private SpriteManager spriteManager;
+	@Inject
+	private SkillIconManager skillIconManager;
 
-    @Inject
-    private SkillIconManager skillIconManager;
+	@Inject
+	private ConfigManager configManager;
 
-    @Inject
-    private ConfigManager configManager;
+	@Inject
+	private TasksTrackerConfig config;
 
-    @Inject
-    private TasksTrackerConfig config;
+	@Inject
+	private TaskDataClient taskDataClient;
 
-    @Inject
-    private TaskDataClient taskDataClient;
+	@Inject
+	private TrackerDataStore trackerDataStore;
 
-    @Inject
-    private TrackerDataStore trackerDataStore;
+	@Inject
+	private EventBus eventBus;
 
-    @Inject
-    private EventBus eventBus;
+	@Inject
+	private OverlayManager overlayManager;
 
-    @Inject
-    private OverlayManager overlayManager;
+	@Inject
+	private TasksTrackerOverlay overlay;
 
-    @Inject
-    private NpcOverlayService npcOverlayService;
+	private NavigationButton navButton;
+	public TasksTrackerPluginPanel pluginPanel;
 
-    @Inject
-    private TasksTrackerOverlay overlay;
+	public int[] playerSkills;
+	public String taskTextFilter;
 
-    private NavigationButton navButton;
-    public TasksTrackerPluginPanel pluginPanel;
+	@Getter @Setter
+	private Task currentTask;
 
-    public int[] playerSkills;
-    public String taskTextFilter;
+	@Getter
+	public final Map<TaskType, TaskManager> taskManagers = new HashMap<>();
 
-    @Getter
-    private Task currentTask;
+	@Override
+	protected void startUp()
+	{
+		// Create plugin panel first so it's ready when task data loads
+		pluginPanel = new TasksTrackerPluginPanel(this, config, clientThread, spriteManager, skillIconManager);
 
-    @Getter
-    public final Map<TaskType, TaskManager> taskManagers = new HashMap<>();
+		navButton = NavigationButton.builder()
+			.tooltip("Tasks Tracker")
+			.icon(ImageUtil.loadImageResource(getClass(), "panel_icon.png"))
+			.priority(5)
+			.panel(pluginPanel)
+			.build();
 
-    @Override
-    protected void startUp() {
-        // Create plugin panel first so it's ready when task data loads
-        pluginPanel = new TasksTrackerPluginPanel(this, config, clientThread, spriteManager, skillIconManager);
+		clientToolbar.addNavigation(navButton);
+		overlayManager.add(overlay);
 
-        navButton = NavigationButton.builder()
-                .tooltip("Tasks Tracker")
-                .icon(ImageUtil.loadImageResource(getClass(), "panel_icon.png"))
-                .priority(5)
-                .panel(pluginPanel)
-                .build();
+		// Initialize task managers for each task type
+		for (TaskType taskType : TaskType.values()) {
+			TaskManager manager = new TaskManager(taskType, taskDataClient);
+			taskManagers.put(taskType, manager);
+			
+			// Load task data for this manager
+			manager.asyncLoadTaskSourceData(tasks -> {
+				if (taskType == config.taskType()) {
+					clientThread.invokeLater(() -> {
+						pluginPanel.refreshAll();
+					});
+				}
+			});
+		}
+	}
 
-        clientToolbar.addNavigation(navButton);
-        overlayManager.add(overlay);
+	@Override
+	protected void shutDown()
+	{
+		clientToolbar.removeNavigation(navButton);
+		overlayManager.remove(overlay);
+		taskManagers.clear();
+		clearShortestPath();
+	}
 
-        // Initialize task managers for each task type
-        for (TaskType taskType : TaskType.values()) {
-            TaskManager manager = new TaskManager(taskType, taskDataClient);
-            taskManagers.put(taskType, manager);
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged gameStateChanged)
+	{
+		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
+		{
+			pluginPanel.handleLogin();
+		}
+		else if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			pluginPanel.handleLogout();
+		}
+	}
 
-            // Load task data for this manager
-            manager.asyncLoadTaskSourceData(tasks -> {
-                if (taskType == config.taskType()) {
-                    clientThread.invokeLater(() -> {
-                        pluginPanel.refreshAll();
-                    });
-                }
-            });
-        }
+	@Subscribe
+	public void onGameTick(GameTick tick)
+	{
+		if (client.getGameState() != GameState.LOGGED_IN)
+		{
+			return;
+		}
 
-        npcOverlayService.registerHighlighter(this::highlightedNpcs);
-    }
+		int[] newSkills = client.getRealSkillLevels();
+		if (playerSkills == null || !java.util.Arrays.equals(playerSkills, newSkills))
+		{
+			playerSkills = newSkills;
+			pluginPanel.refreshAll();
+		}
 
-    private HighlightedNpc highlightedNpcs(NPC npc) {
+		// Update shortest path if current task has a world position
+		if (currentTask != null && currentTask.getWorldPosition() != null &&
+			(currentTask.getWorldPosition().getX() != 0 || 
+			currentTask.getWorldPosition().getY() != 0 || 
+			currentTask.getWorldPosition().getZ() != 0)) {
+			setShortestPath();
+		}
+	}
 
-        if (currentTask == null || currentTask.getNPC() == null) {
-            log.info("No current task or NPC to highlight");
-            return null;
-        }
+	public void saveCurrentTaskData()
+	{
+		List<Task> tasks = pluginPanel.getTasks();
+		if (tasks != null) {
+			trackerDataStore.save(tasks);
+		}
+	}
 
-        final String npcName = npc.getName();
+	public void setCurrentTask(Task task) {
+		if (currentTask != task) {
+			clearShortestPath();
+			
+			// Untrack previous current task if it exists and isn't completed
+			if (currentTask != null && !currentTask.isCompleted()) {
+				currentTask.setTracked(false);
+			}
+			currentTask = task;
+			// Track new current task
+			if (currentTask != null) {
+				currentTask.setTracked(true);
+				// Set shortest path if task has world position
+				if (currentTask.getWorldPosition() != null &&
+					(currentTask.getWorldPosition().getX() != 0 || 
+					currentTask.getWorldPosition().getY() != 0 || 
+					currentTask.getWorldPosition().getZ() != 0)) {
+					setShortestPath();
+				}
+			}
+			// Refresh the panel to show changes
+			pluginPanel.refreshAll();
+			saveCurrentTaskData();
+		}
+	}
 
-        if (npcName != null && npcName.equalsIgnoreCase(currentTask.getNPC())) {
-            log.info("Highlighting NPC: {}", npcName);
-            return HighlightedNpc.builder()
-                    .npc(npc)
-                    .highlightColor(Color.cyan)
-//                    .fillColor(Color.cyan)
-                    .hull(true)
-                    .outline(true)
-                    .name(true)
-                    .nameOnMinimap(true)
-                    .borderWidth((float) 1)
-                    .outlineFeather(1)
-                    .render(this::render)
-                    .build();
-        }
-        return null;
-    }
+	public void setShortestPath() {
+		if (currentTask != null && client.getLocalPlayer() != null) {
+			Map<String, Object> message = new HashMap<>();
+			message.put("pluginName", "shortestpath");
+			message.put("action", "path");
+			
+			Map<String, Object> data = new HashMap<>();
+			data.put("start", client.getLocalPlayer().getWorldLocation());
+			data.put("target", currentTask.getWorldPosition().toWorldPoint());
+			message.put("data", data);
+			
+			eventBus.post(message);
+		}
+	}
 
-    @Override
-    protected void shutDown() {
-        clientToolbar.removeNavigation(navButton);
-        overlayManager.remove(overlay);
-        taskManagers.clear();
-        clearShortestPath();
-        npcOverlayService.unregisterHighlighter(this::highlightedNpcs);
+	public void clearShortestPath() {
+		Map<String, Object> message = new HashMap<>();
+		message.put("pluginName", "shortestpath");
+		message.put("action", "clear");
+		eventBus.post(message);
+	}
 
-    }
+	public void refresh() {
+		pluginPanel.refreshAll();
+	}
 
-    @Subscribe
-    public void onGameStateChanged(GameStateChanged gameStateChanged) {
-        if (gameStateChanged.getGameState() == GameState.LOGGED_IN) {
-            pluginPanel.handleLogin();
-        } else if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
-            pluginPanel.handleLogout();
-        }
-    }
+	public void openImportJsonDialog() {
+		// Implementation for opening import dialog
+		log.debug("Opening import dialog...");
+	}
 
-    @Subscribe
-    public void onGameTick(GameTick tick) {
-        if (client.getGameState() != GameState.LOGGED_IN) {
-            return;
-        }
+	public void sendTotalsToChat() {
+		// Implementation for sending totals to chat
+		log.debug("Sending totals to chat...");
+	}
 
-        int[] newSkills = client.getRealSkillLevels();
-        if (playerSkills == null || !java.util.Arrays.equals(playerSkills, newSkills)) {
-            playerSkills = newSkills;
-            pluginPanel.refreshAll();
-        }
+	public void copyJsonToClipboard(TaskType taskType) {
+		if (taskType == null) return;
+		
+		TaskManager manager = taskManagers.get(taskType);
+		if (manager != null) {
+			String json = manager.toJson();
+			StringSelection stringSelection = new StringSelection(json);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+		}
+	}
 
-        // Update shortest path if current task has a world position
-        if (currentTask != null && currentTask.getWorldPosition() != null
-                && (currentTask.getWorldPosition().getX() != 0
-                || currentTask.getWorldPosition().getY() != 0
-                || currentTask.getWorldPosition().getZ() != 0) && client.getLocalPlayer().getWorldLocation().distanceTo(currentTask.getWorldLocation()) > 10) {
-            setShortestPath();
-        }
+	public TasksTrackerConfig getConfig() {
+		return config;
+	}
 
-        if (currentTask != null && currentTask.getWorldPosition() == null) {
-            clearShortestPath();
-        }
-    }
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
 
-    public void saveCurrentTaskData() {
-        List<Task> tasks = pluginPanel.getTasks();
-        if (tasks != null) {
-            trackerDataStore.save(tasks);
-        }
-    }
-
-    public void setCurrentTask(Task task) {
-        if (currentTask != task) {
-            clearShortestPath();
-
-            // Untrack previous current task if it exists and isn't completed
-            if (currentTask != null && !currentTask.isCompleted()) {
-                currentTask.setTracked(false);
-            }
-            currentTask = task;
-            // Track new current task
-            if (currentTask != null) {
-                currentTask.setTracked(true);
-                // Set shortest path if task has world position
-                if (currentTask.getWorldPosition() != null
-                        && (currentTask.getWorldPosition().getX() != 0
-                        || currentTask.getWorldPosition().getY() != 0
-                        || currentTask.getWorldPosition().getZ() != 0)) {
-                    setShortestPath();
-                }
-            }
-            // Refresh the panel to show changes
-            pluginPanel.refreshAll();
-            saveCurrentTaskData();
-        }
-    }
-
-    public void setShortestPath() {
-        if (currentTask != null && client.getLocalPlayer() != null) {
-            log.info("Setting shortest path to task: {}", currentTask.getWorldLocation());
-            Map<String, Object> data = new HashMap<>();
-            data.put("start", client.getLocalPlayer().getWorldLocation());
-            data.put("target", currentTask.getWorldLocation());
-            eventBus.post(new PluginMessage("shortestpath", "path", data));
-        }
-    }
-
-    public void clearShortestPath() {
-        Map<String, Object> message = new HashMap<>();
-        message.put("pluginName", "shortestpath");
-        message.put("action", "clear");
-        eventBus.post(message);
-    }
-
-    public void refresh() {
-        pluginPanel.refreshAll();
-    }
-
-    public void openImportJsonDialog() {
-        // Implementation for opening import dialog
-        log.debug("Opening import dialog...");
-    }
-
-    public void sendTotalsToChat() {
-        // Implementation for sending totals to chat
-        log.debug("Sending totals to chat...");
-    }
-
-    public void copyJsonToClipboard(TaskType taskType) {
-        if (taskType == null) {
-            return;
-        }
-
-        TaskManager manager = taskManagers.get(taskType);
-        if (manager != null) {
-            String json = manager.toJson();
-            StringSelection stringSelection = new StringSelection(json);
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-        }
-    }
-
-    public TasksTrackerConfig getConfig() {
-        return config;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    @Provides
-    TasksTrackerConfig provideConfig(ConfigManager configManager) {
-        return configManager.getConfig(TasksTrackerConfig.class);
-    }
-
-    /**
-     * NPCs to highlight
-     */
-    @Getter(AccessLevel.PACKAGE)
-    private final HashMap<NPC, HighlightedNpc> highlightedNpcs = new HashMap<>();
-//
-//    @Subscribe
-//    public void onNpcSpawned(NpcSpawned npcSpawned) {
-//        if (currentTask == null || currentTask.getNPC() == null) {
-//            log.info("No current task or NPC to highlight");
-//            return;
-//        }
-//
-//        final NPC npc = npcSpawned.getNpc();
-//        final String npcName = npc.getName();
-//
-//        highlightedNpcs.remove(npc);
-//        if (npcName == null) {
-//            log.info("NPC name is null");
-//            return;
-//        }
-//
-//        if (npcName.equalsIgnoreCase(currentTask.getNPC())) {
-////            HighlightedNpc highlightedNpc = new HighlightedNpc(npc, config.highlightColor());
-//            log.info("Highlighting NPC: {}", npcName);
-//            highlightedNpcs.put(npc, highlightedNpc(npc));
-//        }
-//
-//    }
-//
-//    @Subscribe
-//    public void onNpcChanged(NpcChanged npcChanged) {
-//        if (currentTask == null || currentTask.getNPC() == null) {
-//            log.info("No current task or NPC to highlight");
-//            return;
-//        }
-//
-//        final NPC npc = npcChanged.getNpc();
-//        final String npcName = npc.getName();
-//
-//        highlightedNpcs.remove(npc);
-//        if (npcName == null) {
-//            log.info("NPC name is null");
-//            return;
-//        }
-//
-//        if (npcName.equalsIgnoreCase(currentTask.getNPC())) {
-////            HighlightedNpc highlightedNpc = new HighlightedNpc(npc, config.highlightColor());
-//            log.info("Highlighting NPC: {}", npcName);
-//            highlightedNpcs.put(npc, highlightedNpc(npc));
-//        }
-//
-//        NpcOverlayService npcOverlayService = new NpcOverlayService(client);
-//    }
-
-    private HighlightedNpc highlightedNpc(NPC npc) {
-        final int npcId = npc.getId();
-
-        return HighlightedNpc.builder()
-                .npc(npc)
-                .highlightColor(Color.cyan)
-                .fillColor(Color.cyan)
-                .hull(true)
-                .outline(true)
-                .name(true)
-                .nameOnMinimap(true)
-                .borderWidth((float) 1)
-                .outlineFeather(1)
-                .render(this::render)
-                .build();
-    }
-
-    private boolean render(NPC n) {
-        final NPCComposition c = n.getTransformedComposition();
-        if (c != null && c.isFollower()) {
-            return false;
-        }
-        return true;
-    }
+	@Provides
+	TasksTrackerConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(TasksTrackerConfig.class);
+	}
 }
