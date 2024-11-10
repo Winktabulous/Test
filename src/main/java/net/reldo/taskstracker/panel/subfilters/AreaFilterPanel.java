@@ -2,7 +2,7 @@ package net.reldo.taskstracker.panel.subfilters;
 
 import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.tasktypes.TaskType;
-import net.reldo.taskstracker.tasktypes.league4.League4TaskArea;
+import net.reldo.taskstracker.tasktypes.league5.LeagueTaskArea;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.ImageUtil;
@@ -58,14 +58,13 @@ public class AreaFilterPanel extends FilterButtonPanel
         String directory = "panel/components/task_areas/";
 
         if (plugin.getConfig().taskType() == null ||
-            plugin.getConfig().taskType().equals(TaskType.COMBAT) ||
-            plugin.getConfig().taskType().equals(TaskType.LEAGUE_3)) return images;
+            plugin.getConfig().taskType().equals(TaskType.COMBAT)) return images;
 
-        if (plugin.getConfig().taskType().equals(TaskType.LEAGUE_4))
+        if (plugin.getConfig().taskType().equals(TaskType.LEAGUE_5))
         {
             directory += "league4/";
 
-            for (League4TaskArea area : League4TaskArea.values())
+            for (LeagueTaskArea area : LeagueTaskArea.values())
             {
                 areaName = area.name().toLowerCase();
                 String areaIcon = directory + areaName + ".png";
@@ -82,7 +81,7 @@ public class AreaFilterPanel extends FilterButtonPanel
     public void redraw()
     {
         if (plugin.getConfig().taskType() != null)
-            this.setVisible(plugin.getConfig().taskType().equals(TaskType.LEAGUE_4));
+            this.setVisible(plugin.getConfig().taskType().equals(TaskType.LEAGUE_5));
 
         //@todo remove duplication by generalising save/load to all subfilters
         assert SwingUtilities.isEventDispatchThread();

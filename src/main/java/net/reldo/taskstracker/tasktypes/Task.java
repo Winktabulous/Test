@@ -1,11 +1,14 @@
 package net.reldo.taskstracker.tasktypes;
 
+import java.time.Instant;
+
 import com.google.gson.annotations.Expose;
+
+import lombok.Data;
 import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.data.reldo.ReldoTaskSave;
 import net.reldo.taskstracker.panel.TaskPanel;
-import java.time.Instant;
-import lombok.Data;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.game.SpriteManager;
@@ -31,6 +34,28 @@ public abstract class Task
 
 	private String area;
 	private String taskCategory;
+	
+	// New fields to match JSON format
+	private WorldPosition worldPosition;
+	private String[] requiredItems;
+
+	private String NPC;
+
+	 @Data
+	 public static class WorldPosition {
+	 	private int x;
+	 	private int y;
+	 	private int z;
+	 }
+
+	 public WorldPoint getWorldLocation()
+	 {
+	 	if (worldPosition == null)
+	 	{
+	 		return null;
+	 	}
+	 	return new WorldPoint(worldPosition.x, worldPosition.y, worldPosition.z);
+	 }
 
 	public boolean isCompleted()
 	{

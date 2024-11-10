@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
@@ -45,7 +46,7 @@ public class TaskListPanel extends JScrollPane
 		setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
-	public Collection<Task> getTasks()
+	public List<Task> getTaskList()
 	{
 		// TODO: Build a filter service
 		if (plugin.getConfig().taskType() == null)
@@ -56,6 +57,13 @@ public class TaskListPanel extends JScrollPane
 			.stream()
 			.sorted(Comparator.comparing(Task::getClientSortId))
 			.collect(Collectors.toList());
+	}
+
+	public void refreshAll()
+	{
+		SwingUtilities.invokeLater(() -> {
+			refresh(null); // null refreshes all tasks
+		});
 	}
 
 	public String getEmptyTaskListMessage()
@@ -125,7 +133,7 @@ public class TaskListPanel extends JScrollPane
 			emptyTasks.setVisible(false);
 
 			log.debug(" Creating panels...");
-			Collection<Task> tasks = getTasks();
+			Collection<Task> tasks = getTaskList();
 			if (tasks == null || tasks.size() == 0)
 			{
 				emptyTasks.setVisible(true);

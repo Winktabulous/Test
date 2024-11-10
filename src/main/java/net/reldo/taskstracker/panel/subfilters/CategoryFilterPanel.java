@@ -2,7 +2,7 @@ package net.reldo.taskstracker.panel.subfilters;
 
 import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.tasktypes.TaskType;
-import net.reldo.taskstracker.tasktypes.league4.League4TaskCategory;
+import net.reldo.taskstracker.tasktypes.league5.LeagueTaskCategory;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.ImageUtil;
@@ -59,14 +59,13 @@ public class CategoryFilterPanel extends FilterButtonPanel
         String directory = "panel/components/task_categories/";
 
         if (plugin.getConfig().taskType() == null ||
-            plugin.getConfig().taskType().equals(TaskType.COMBAT) ||
-            plugin.getConfig().taskType().equals(TaskType.LEAGUE_3)) return images;
+            plugin.getConfig().taskType().equals(TaskType.COMBAT)) return images;
 
-        if (plugin.getConfig().taskType().equals(TaskType.LEAGUE_4))
+        if (plugin.getConfig().taskType().equals(TaskType.LEAGUE_5))
         {
             directory += "league4/";
 
-            for (League4TaskCategory category : League4TaskCategory.values())
+            for (LeagueTaskCategory category : LeagueTaskCategory.values())
             {
                 categoryName = category.name().toLowerCase();
                 String categoryIcon = directory + categoryName + ".png";
@@ -83,7 +82,7 @@ public class CategoryFilterPanel extends FilterButtonPanel
     public void redraw()
     {
         if (plugin.getConfig().taskType() != null)
-            this.setVisible(plugin.getConfig().taskType().equals(TaskType.LEAGUE_4));
+            this.setVisible(plugin.getConfig().taskType().equals(TaskType.LEAGUE_5));
 
         super.redraw();
     }

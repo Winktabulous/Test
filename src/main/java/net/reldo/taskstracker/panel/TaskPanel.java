@@ -11,7 +11,9 @@ import net.reldo.taskstracker.panel.filters.Filter;
 import net.reldo.taskstracker.tasktypes.Task;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BoxLayout;
@@ -94,9 +96,23 @@ public abstract class TaskPanel extends JPanel
 		setBorder(new EmptyBorder(0, 0, 7, 0));
 
 		container.setBorder(new EmptyBorder(7, 7, 6, 0));
+		container.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		// Add click listener to container
+		container.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				task.setCompleted(!task.isCompleted());
+				if (task.isCompleted() && !task.isTracked()) {
+					// Set as current task when completed
+					plugin.setCurrentTask(task);
+				}
+				refresh();
+				plugin.saveCurrentTaskData();
+			}
+		});
 
 		// Body
-
 		name.setFont(FontManager.getRunescapeSmallFont());
 		name.setForeground(Color.WHITE);
 		body.add(name, BorderLayout.NORTH);
@@ -115,6 +131,9 @@ public abstract class TaskPanel extends JPanel
 		toggleTrack.setBorder(new EmptyBorder(5, 0, 5, 0));
 		toggleTrack.addActionListener(e -> {
 			task.setTracked(toggleTrack.isSelected());
+			if (toggleTrack.isSelected()) {
+				plugin.setCurrentTask(task);
+			}
 			plugin.pluginPanel.taskListPanel.refresh(task);
 			plugin.saveCurrentTaskData();
 		});
@@ -158,8 +177,16 @@ public abstract class TaskPanel extends JPanel
 
 	public void refresh()
 	{
-		name.setText(Util.wrapWithHtml(task.getName()));
-		description.setText(Util.wrapWithHtml(task.getDescription()));
+		String nameText = task.getName();
+		String descText = task.getDescription();
+		
+		if (task.isCompleted()) {
+			nameText = "<strike>" + nameText + "</strike>";
+			descText = "<strike>" + descText + "</strike>";
+		}
+		
+		name.setText(Util.wrapWithHtml(nameText));
+		description.setText(Util.wrapWithHtml(descText));
 		setBackgroundColor(getTaskBackgroundColor(task, plugin.playerSkills));
 		toggleTrack.setSelected(task.isTracked());
 		toggleIgnore.setSelected(task.isIgnored());

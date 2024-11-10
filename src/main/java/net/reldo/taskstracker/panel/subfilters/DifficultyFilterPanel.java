@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.tasktypes.TaskType;
 import net.reldo.taskstracker.tasktypes.combattask.CombatTaskTier;
-import net.reldo.taskstracker.tasktypes.league4.League4TaskTier;
+import net.reldo.taskstracker.tasktypes.league5.LeagueTaskTier;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.ImageUtil;
@@ -62,13 +62,13 @@ public class DifficultyFilterPanel extends FilterButtonPanel
 
         if (plugin.getConfig().taskType() == null) return images;
 
-        if (plugin.getConfig().taskType().equals(TaskType.LEAGUE_3) ||
-            plugin.getConfig().taskType().equals(TaskType.LEAGUE_4))
+        if (
+            plugin.getConfig().taskType().equals(TaskType.LEAGUE_5))
         {
             directory += "league3/";
 
             //@fixme Hardcoded for league 4
-            for (League4TaskTier tier : League4TaskTier.values())
+            for (LeagueTaskTier tier : LeagueTaskTier.values())
             {
                 tierName = tier.name().toLowerCase();
                 String tierIcon = directory + tierName + ".png";

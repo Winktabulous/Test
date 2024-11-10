@@ -1,74 +1,62 @@
 package net.reldo.taskstracker.data;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
+
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.google.gson.Gson;
+
 import lombok.extern.slf4j.Slf4j;
 import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.tasktypes.Task;
-import net.reldo.taskstracker.tasktypes.TaskType;
 import net.runelite.client.config.ConfigManager;
 
+@Singleton
 @Slf4j
 public class TrackerDataStore
 {
-	public static final String CONFIG_TASKS_PREFIX = "tasks";
-	public static final String CONFIG_GROUP_PREFIX_SEPARATOR = "-";
-	public static final String CONFIG_GROUP_NAME = TasksTrackerPlugin.CONFIG_GROUP_NAME;
-
-	private Gson gson;
-	private final ConfigManager configManager;
-
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
-	public TrackerDataStore(ConfigManager configManager, Gson gson)
-	{
-		this.configManager = configManager;
-		this.gson = gson.newBuilder()
-			.excludeFieldsWithoutExposeAnnotation()
-			.registerTypeAdapter(float.class, new LongSerializer())
-			.create();
-	}
+	private Gson gson;
 
-	public HashMap<Integer, Task> loadTaskTypeFromConfig(TaskType taskType)
+	public void save(List<Task> tasks)
 	{
-		log.debug("loadTaskTypeFromConfig {}", taskType.getDisplayString());
-		String key = CONFIG_TASKS_PREFIX + CONFIG_GROUP_PREFIX_SEPARATOR + taskType.name();
-		String jsonString = configManager.getRSProfileConfiguration(CONFIG_GROUP_NAME, key);
-		if (jsonString == null)
+		if (tasks == null || tasks.isEmpty())
 		{
-			log.debug("No save information for task type {}, returning empty", taskType.getDisplayString());
-			return new HashMap<>();
+			return;
 		}
 
-		Type taskClassType = taskType.getClassType();
-		Type deserializeType = TypeToken.getParameterized(HashMap.class, Integer.class, taskClassType).getType();
 		try
 		{
-			return this.gson.fromJson(jsonString, deserializeType);
+			String json = gson.toJson(tasks);
+			configManager.setConfiguration(TasksTrackerPlugin.CONFIG_GROUP_NAME, "taskData", json);
+			log.debug("Saved task data successfully");
 		}
-		catch (JsonParseException ex)
+		catch (Exception e)
 		{
-			log.error("{} {} json invalid. All is lost", CONFIG_GROUP_NAME, key, ex);
-			configManager.unsetRSProfileConfiguration(CONFIG_GROUP_NAME, key);
-			return new HashMap<>();
+			log.error("Failed to save task data", e);
 		}
 	}
 
-	public void saveTaskTypeToConfig(TaskType taskType, Collection<Task> tasks)
+	public List<Task> load()
 	{
-		log.debug("saveTaskTypeToConfig");
-		Map<Integer, Task> tasksWithData = tasks.stream()
-			.filter(task -> task.getCompletedOn() != 0 || task.getIgnoredOn() != 0 || task.getTrackedOn() != 0)
-			.collect(Collectors.<Task, Integer, Task>toMap(Task::getId, task -> task));
+		String json = configManager.getConfiguration(TasksTrackerPlugin.CONFIG_GROUP_NAME, "taskData");
+		if (json == null || json.isEmpty())
+		{
+			return null;
+		}
 
-		String configValue = this.gson.toJson(tasksWithData);
-		configManager.setRSProfileConfiguration(CONFIG_GROUP_NAME, CONFIG_TASKS_PREFIX + CONFIG_GROUP_PREFIX_SEPARATOR + taskType.name(), configValue);
+		try
+		{
+			return gson.fromJson(json, List.class);
+		}
+		catch (Exception e)
+		{
+			log.error("Failed to load task data", e);
+			return null;
+		}
 	}
 }

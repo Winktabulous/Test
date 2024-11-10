@@ -5,6 +5,7 @@ import net.reldo.taskstracker.TasksTrackerPlugin;
 import net.reldo.taskstracker.tasktypes.Task;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,34 @@ public class TasksTrackerPluginPanel extends PluginPanel
 	public Dimension getPreferredSize()
 	{
 		return new Dimension(PANEL_WIDTH + SCROLLBAR_WIDTH, super.getPreferredSize().height);
+	}
+
+	public void handleLogin()
+	{
+		SwingUtilities.invokeLater(() -> {
+			setLoggedIn(true);
+			redraw();
+		});
+	}
+
+	public void handleLogout()
+	{
+		SwingUtilities.invokeLater(() -> {
+			setLoggedIn(false);
+		});
+	}
+
+	public void refreshAll()
+	{
+		if (loggedIn && taskListPanel != null)
+		{
+			taskListPanel.refreshAll();
+		}
+	}
+
+	public List<Task> getTasks()
+	{
+		return taskListPanel != null ? taskListPanel.getTaskList() : null;
 	}
 
 	public void redraw()

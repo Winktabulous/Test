@@ -1,15 +1,19 @@
 package net.reldo.taskstracker.data;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.reldo.taskstracker.tasktypes.Task;
@@ -24,10 +28,14 @@ import okhttp3.Response;
 @Slf4j
 public class TaskDataClient
 {
-	@Inject	private OkHttpClient okHttpClient;
-	@Inject private Gson gson;
+	@Inject	
+	private OkHttpClient okHttpClient;
+	
+	@Inject 
+	@Getter
+	private Gson gson;
 
-	private static final String BASE_URL = "https://raw.githubusercontent.com/osrs-reldo/task-json-store/main/";
+	private static final String BASE_URL = "https://raw.githubusercontent.com/RSynapse/task-json-store/main/";
 	private static final String JSON_MIN_PATH = BASE_URL + "json/min/";
 
 	public void loadTaskSourceData(TaskType taskType, CallbackCommand<ArrayList<Task>> callback)
