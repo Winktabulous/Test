@@ -35,6 +35,21 @@ public interface LeaguesHelperConfig extends Config {
     )
     String lumbridgeSection2 = "lumbridgeSection2";
 
+    @ConfigSection(
+            name = "Karamja",
+            description = "Tasks in the Karamja area",
+            position = 4
+    )
+    String karamjaSection = "karamjaSection";
+
+    @ConfigSection(
+            name = "Varrock Part 2",
+            description = "Additional tasks in the Varrock area",
+            position = 5
+    )
+    String varrockSection2 = "varrockSection2";
+
+
     // Lumbridge Part 1 Tasks
     @ConfigItem(
             keyName = "lumbridgeOpenLeaguesMenu",
@@ -714,11 +729,390 @@ public interface LeaguesHelperConfig extends Config {
     )
     default boolean lumbridgeCompleteSheepShearer() { return false; }
 
+    // Karamja Tasks
+    @ConfigItem(
+            keyName = "karamjaBuyFromTraders",
+            name = "Buy From Traders",
+            description = "Buy a knife and a torch",
+            section = karamjaSection,
+            position = 0
+    )
+    default boolean karamjaBuyFromTraders() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaTpToBrimhaven",
+            name = "Teleport to Brimhaven",
+            description = "Teleport to Brimhaven",
+            section = karamjaSection,
+            position = 1
+    )
+    default boolean karamjaTpToBrimhaven() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaKeepSardine",
+            name = "Keep a Sardine",
+            description = "Keep a sardine for Gertrude's cat later",
+            section = karamjaSection,
+            position = 2
+    )
+    default boolean karamjaKeepSardine() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaBuyFromCrew",
+            name = "Buy From Crew",
+            description = "Buy Something From Trader Crewmembers",
+            section = karamjaSection,
+            position = 3
+    )
+    default boolean karamjaBuyFromCrew() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaPickPineapple",
+            name = "Pick a Pineapple",
+            description = "Pick a Pineapple on Karamja",
+            section = karamjaSection,
+            position = 4
+    )
+    default boolean karamjaPickPineapple() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaEnterBrimhavenDungeon",
+            name = "Enter Brimhaven Dungeon",
+            description = "Enter the Brimhaven Dungeon",
+            section = karamjaSection,
+            position = 5
+    )
+    default boolean karamjaEnterBrimhavenDungeon() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCatchKarambwanji",
+            name = "Catch Karambwanji",
+            description = "Catch a Karambwanji",
+            section = karamjaSection,
+            position = 6
+    )
+    default boolean karamjaCatchKarambwanji() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaLightTorch",
+            name = "Light a Torch",
+            description = "Light a Torch",
+            section = karamjaSection,
+            position = 7
+    )
+    default boolean karamjaLightTorch() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCartToShilo",
+            name = "Cart to Shilo",
+            description = "Take the cart to shilo | Buy bait, Feathers",
+            section = karamjaSection,
+            position = 8
+    )
+    default boolean karamjaCartToShilo() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCatchHerring",
+            name = "Catch a Herring",
+            description = "Catch a Herring",
+            section = karamjaSection,
+            position = 9
+    )
+    default boolean karamjaCatchHerring() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaUseHerringOnTree",
+            name = "Use Herring on Tree",
+            description = "Use a Herring on a tree",
+            section = karamjaSection,
+            position = 10
+    )
+    default boolean karamjaUseHerringOnTree() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCatchSalmon",
+            name = "Catch Salmon",
+            description = "Catch a Salmon on Karamja",
+            section = karamjaSection,
+            position = 11
+    )
+    default boolean karamjaCatchSalmon() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCatch50Salmon",
+            name = "Catch 50 Salmon",
+            description = "Catch 50 Salmon",
+            section = karamjaSection,
+            position = 12
+    )
+    default boolean karamjaCatch50Salmon() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaGetDuradelTask",
+            name = "Get Duradel Task",
+            description = "Get slayer task from Duradel",
+            section = karamjaSection,
+            position = 13
+    )
+    default boolean karamjaGetDuradelTask() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaReceiveSlayerTask",
+            name = "Receive Slayer Task",
+            description = "Receive a Slayer Task",
+            section = karamjaSection,
+            position = 14
+    )
+    default boolean karamjaReceiveSlayerTask() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaEquipSpinyHelm",
+            name = "Equip Spiny Helm",
+            description = "Equip spiny helm",
+            section = karamjaSection,
+            position = 15
+    )
+    default boolean karamjaEquipSpinyHelm() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaCheckSlayerTask",
+            name = "Check Slayer Task",
+            description = "Check your slayer task",
+            section = karamjaSection,
+            position = 16
+    )
+    default boolean karamjaCheckSlayerTask() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaFillBananaCrate",
+            name = "Fill Banana Crate",
+            description = "Fill a Crate With Bananas",
+            section = karamjaSection,
+            position = 17
+    )
+    default boolean karamjaFillBananaCrate() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaDefeatTzhaar",
+            name = "Defeat Tzhaar",
+            description = "Defeat a Tzhaar",
+            section = karamjaSection,
+            position = 18
+    )
+    default boolean karamjaDefeatTzhaar() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaReach10Combat",
+            name = "Reach 10 Combat",
+            description = "Reach 10 Combat",
+            section = karamjaSection,
+            position = 19
+    )
+    default boolean karamjaReach10Combat() { return false; }
+
+    @ConfigItem(
+            keyName = "karamjaReachTotal100",
+            name = "Reach Total 100",
+            description = "Reach Total Level 100",
+            section = karamjaSection,
+            position = 20
+    )
+
+    default boolean karamjaReachTotal100() { return false; }
+    // Varrock Part 2 Tasks
+    @ConfigItem(
+            keyName = "varrockCompleteGertrudesCat",
+            name = "Complete Gertrude's Cat",
+            description = "Complete Gertrude's Cat",
+            section = varrockSection2,
+            position = 0
+    )
+    default boolean varrockCompleteGertrudesCat() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockCompleteAgilityCourse",
+            name = "Complete Varrock Agility Course",
+            description = "Complete the Varrock Agility Course",
+            section = varrockSection2,
+            position = 1
+    )
+    default boolean varrockCompleteAgilityCourse() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockComplete10Laps",
+            name = "Complete 10 Laps",
+            description = "Complete 10 Laps of the Varrock Agility Course",
+            section = varrockSection2,
+            position = 2
+    )
+    default boolean varrockComplete10Laps() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockComplete50RooftopLaps",
+            name = "Complete 50 Rooftop Laps",
+            description = "Complete 50 Laps of a Rooftop Agility Course",
+            section = varrockSection2,
+            position = 3
+    )
+    default boolean varrockComplete50RooftopLaps() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockAchieveLevel40",
+            name = "Achieve Level 40",
+            description = "Achieve Your First Level 40",
+            section = varrockSection2,
+            position = 4
+    )
+    default boolean varrockAchieveLevel40() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockAchieveLevel50",
+            name = "Achieve Level 50",
+            description = "Achieve Your First Level 50",
+            section = varrockSection2,
+            position = 5
+    )
+    default boolean varrockAchieveLevel50() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockPickpocketGuard",
+            name = "Pickpocket Guard",
+            description = "Pickpocket a Guard",
+            section = varrockSection2,
+            position = 6
+    )
+    default boolean varrockPickpocketGuard() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockObtain800Coins",
+            name = "Obtain 800 Coins",
+            description = "Obtain 800 Coins From Coin Pouches At Once",
+            section = varrockSection2,
+            position = 7
+    )
+    default boolean varrockObtain800Coins() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmeltBronzeBar",
+            name = "Smelt Bronze Bar",
+            description = "Smelt a Bronze Bar",
+            section = varrockSection2,
+            position = 8
+    )
+    default boolean varrockSmeltBronzeBar() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmithBronzeHelm",
+            name = "Smith Bronze Full Helm",
+            description = "Smith a Bronze full helm",
+            section = varrockSection2,
+            position = 9
+    )
+    default boolean varrockSmithBronzeHelm() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmeltIronBar",
+            name = "Smelt Iron Bar",
+            description = "Smelt an Iron Bar",
+            section = varrockSection2,
+            position = 10
+    )
+    default boolean varrockSmeltIronBar() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmithBronzePlateskirt",
+            name = "Smith Bronze Plateskirt",
+            description = "Smith a Bronze plateskirt",
+            section = varrockSection2,
+            position = 11
+    )
+    default boolean varrockSmithBronzePlateskirt() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockMine50Iron",
+            name = "Mine 50 Iron Ore",
+            description = "Mine 50 Iron Ore",
+            section = varrockSection2,
+            position = 12
+    )
+    default boolean varrockMine50Iron() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockMine15Coal",
+            name = "Mine 15 Coal",
+            description = "Mine 15 coal",
+            section = varrockSection2,
+            position = 13
+    )
+    default boolean varrockMine15Coal() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmeltSteelBar",
+            name = "Smelt Steel Bar",
+            description = "Smelt a Steel Bar",
+            section = varrockSection2,
+            position = 14
+    )
+    default boolean varrockSmeltSteelBar() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmith10SteelBolts",
+            name = "Smith Steel Bolts",
+            description = "Smith 10 Steel bolts (unf)",
+            section = varrockSection2,
+            position = 15
+    )
+    default boolean varrockSmith10SteelBolts() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockSmith150IronArrowtips",
+            name = "Smith Iron Arrowtips",
+            description = "Smith 150 Iron Arrowtips",
+            section = varrockSection2,
+            position = 16
+    )
+    default boolean varrockSmith150IronArrowtips() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockFletch150IronArrows",
+            name = "Fletch Iron Arrows",
+            description = "Fletch 150 Iron Arrows",
+            section = varrockSection2,
+            position = 17
+    )
+    default boolean varrockFletch150IronArrows() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockPanForJade",
+            name = "Pan for Jade",
+            description = "Pan for an Uncut Jade",
+            section = varrockSection2,
+            position = 18
+    )
+    default boolean varrockPanForJade() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockRestorePrayer",
+            name = "Restore Prayer Points",
+            description = "Restore 5 Prayer Points at an Altar",
+            section = varrockSection2,
+            position = 19
+    )
+    default boolean varrockRestorePrayer() { return false; }
+
+    @ConfigItem(
+            keyName = "varrockReachTotal250",
+            name = "Reach Total 250",
+            description = "Reach Total Level 250",
+            section = varrockSection2,
+            position = 20
+    )
+    default boolean varrockReachTotal250() { return false; }
     @ConfigItem(
             keyName = "showOverlay",
             name = "Show Overlay",
             description = "Toggle the task overlay display",
-            position = 11
+            position = 21
     )
     default boolean showOverlay() { return true; }
 }

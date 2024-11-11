@@ -4,24 +4,24 @@ public enum LeaguesTask {
     // Lumbridge Part 1
     LUMBRIDGE_OPEN_LEAGUES_MENU("Open the Leagues Menu", "Lumbridge Part 1", "Open the Leagues menu", null),
     LUMBRIDGE_COMPLETE_TUTORIAL("Complete the Leagues Tutorial", "Lumbridge Part 1", "Complete the Leagues tutorial", null),
-    LUMBRIDGE_CLAIM_ITEMS_FROM_SAGE("Claim items from sage", "Lumbridge Part 1", "Claim items from the sage", new int[]{3222, 3218, 0}), // Ground floor
+    LUMBRIDGE_CLAIM_ITEMS_FROM_SAGE("Claim items from sage", "Lumbridge Part 1", "Claim items from the sage", new int[]{3222, 3218, 0}),
     LUMBRIDGE_ADJUST_SETTINGS("Settings adjust", "Lumbridge Part 1", "Adjust the game settings", null),
-    LUMBRIDGE_START_RUNE_MYSTERIES("Start Rune Mysteries", "Lumbridge Part 1", "Start the Rune Mysteries quest", new int[]{3212, 3225, 1}), // Second floor
-    LUMBRIDGE_SET_BANK_PIN("Set bank pin", "Lumbridge Part 1", "Set a bank pin", new int[]{3208, 3219, 0}), // Ground floor
-    LUMBRIDGE_PICKPOCKET_CITIZEN("Pickpocket a Citizen", "Lumbridge Part 1", "Pickpocket a citizen", new int[]{3222, 3218, 0}), // Ground floor
+    LUMBRIDGE_START_RUNE_MYSTERIES("Start Rune Mysteries", "Lumbridge Part 1", "Start the Rune Mysteries quest", new int[]{3212, 3225, 1}),
+    LUMBRIDGE_SET_BANK_PIN("Set bank pin", "Lumbridge Part 1", "Set a bank pin", new int[]{3208, 3219, 0}),
+    LUMBRIDGE_PICKPOCKET_CITIZEN("Pickpocket a Citizen", "Lumbridge Part 1", "Pickpocket a citizen", new int[]{3222, 3218, 0}),
     LUMBRIDGE_OPEN_28_COIN_POUCHES("Open 28 Coin Pouches At Once", "Lumbridge Part 1", "Open 28 coin pouches at once", null),
     LUMBRIDGE_ACHIEVE_FIRST_LEVEL_UP("Achieve Your First Level Up", "Lumbridge Part 1", "Achieve your first level up", null),
     LUMBRIDGE_ACHIEVE_FIRST_LEVEL_5("Achieve Your First Level 5", "Lumbridge Part 1", "Achieve your first level 5", null),
     LUMBRIDGE_ACHIEVE_FIRST_LEVEL_10("Achieve Your First Level 10", "Lumbridge Part 1", "Achieve your first level 10", null),
-    LUMBRIDGE_DEFEAT_GOBLIN("Defeat a Goblin", "Lumbridge Part 1", "Defeat a goblin", new int[]{3245, 3235, 0}), // Goblin area near Lumbridge
-    LUMBRIDGE_BURY_BONES("Bury Some Bones", "Lumbridge Part 1", "Bury some bones", new int[]{3222, 3218, 0}), // Ground floor
-    LUMBRIDGE_VISIT_DEATHS_DOMAIN("Visit Death's Domain", "Lumbridge Part 1", "Visit Death's domain", new int[]{3081, 5346, 0}), // Ground floor
-    LUMBRIDGE_DANCE_IN_GRAVEYARD("Dance in a graveyard", "Lumbridge Part 1", "Dance in a graveyard", new int[]{3242, 3259, 0}), // Ground floor
+    LUMBRIDGE_DEFEAT_GOBLIN("Defeat a Goblin", "Lumbridge Part 1", "Defeat a goblin", new int[]{3245, 3235, 0}),
+    LUMBRIDGE_BURY_BONES("Bury Some Bones", "Lumbridge Part 1", "Bury some bones", new int[]{3222, 3218, 0}),
+    LUMBRIDGE_VISIT_DEATHS_DOMAIN("Visit Death's Domain", "Lumbridge Part 1", "Visit Death's domain", new int[]{3081, 5346, 0}),
+    LUMBRIDGE_DANCE_IN_GRAVEYARD("Dance in a graveyard", "Lumbridge Part 1", "Dance in a graveyard", new int[]{3242, 3259, 0}),
     LUMBRIDGE_SUPPLY_RUN("Supply Run", "Lumbridge Part 1", "Complete the Supply Run task", null),
     LUMBRIDGE_SUPPLY_RUN_PT2("Supply Run Pt 2", "Lumbridge Part 1", "Complete the Supply Run Pt 2 task", null),
-    LUMBRIDGE_RUNE_MYSTERY_MAGE_TOWER("Rune Mystery Step @ Mage Tower", "Lumbridge Part 1", "Complete the Rune Mystery step at the Mage Tower", new int[]{3212, 3225, 1}), // Second floor
-    LUMBRIDGE_USE_FAIRY_RING("Use a Fairy Ring", "Lumbridge Part 1", "Use a Fairy Ring", new int[]{3202, 3169, 0}), // Ground floor
-    LUMBRIDGE_ENTER_ZANARIS("Enter Zanaris", "Lumbridge Part 1", "Enter Zanaris", new int[]{3202, 3169, 0}), // Ground floor
+    LUMBRIDGE_RUNE_MYSTERY_MAGE_TOWER("Rune Mystery Step @ Mage Tower", "Lumbridge Part 1", "Complete the Rune Mystery step at the Mage Tower", new int[]{3212, 3225, 1}),
+    LUMBRIDGE_USE_FAIRY_RING("Use a Fairy Ring", "Lumbridge Part 1", "Use a Fairy Ring", new int[]{3202, 3169, 0}),
+    LUMBRIDGE_ENTER_ZANARIS("Enter Zanaris", "Lumbridge Part 1", "Enter Zanaris", new int[]{3202, 3169, 0}),
 
     // Varrock Part 1
     VARROCK_GO_TO_EDGEVILLE("Go to Edgeville (DKR)", "Varrock Part 1", "Go to Edgeville using Dramen/Lunar staff Kingdom ring", new int[]{3087, 3496, 0}),
@@ -85,7 +85,50 @@ public enum LeaguesTask {
     LUMBRIDGE_COMPLETE_SHEEP_SHEARER("Complete Sheep Shearer", "Lumbridge Part 2", "Complete Sheep Shearer", null),
 
     // Karamja
-    KARAMJA_BUY_FROM_TRADERS("Buy Something From Traders", "Karamja", "Buy a knife and a torch", null);
+    KARAMJA_BUY_FROM_TRADERS("Buy Something From Traders", "Karamja", "Buy a knife and a torch", null),
+    KARAMJA_TP_TO_BRIMHAVEN("Teleport to Brimhaven", "Karamja", "Teleport to Brimhaven", new int[]{2758, 3178, 0}),
+    KARAMJA_KEEP_SARDINE("Keep a Sardine", "Karamja", "Keep a sardine for Gertrude's cat later", null),
+    KARAMJA_BUY_FROM_CREW("Buy From Crew", "Karamja", "Buy Something From Trader Crewmembers", new int[]{2954, 3147, 0}),
+    KARAMJA_PICK_PINEAPPLE("Pick a Pineapple", "Karamja", "Pick a Pineapple on Karamja", new int[]{2840, 3135, 0}),
+    KARAMJA_ENTER_BRIMHAVEN_DUNGEON("Enter Brimhaven Dungeon", "Karamja", "Enter the Brimhaven Dungeon", new int[]{2745, 3155, 0}),
+    KARAMJA_CATCH_KARAMBWANJI("Catch Karambwanji", "Karamja", "Catch a Karambwanji", new int[]{2924, 3120, 0}),
+    KARAMJA_LIGHT_TORCH("Light a Torch", "Karamja", "Light a Torch", null),
+    KARAMJA_CART_TO_SHILO("Cart to Shilo", "Karamja", "Take the cart to shilo | Buy bait, Feathers", new int[]{2852, 2960, 0}),
+    KARAMJA_CATCH_HERRING("Catch a Herring", "Karamja", "Catch a Herring", new int[]{2924, 3178, 0}),
+    KARAMJA_USE_HERRING_ON_TREE("Use Herring on Tree", "Karamja", "Use a Herring on a tree", null),
+    KARAMJA_CATCH_SALMON("Catch Salmon", "Karamja", "Catch a Salmon on Karamja", new int[]{2924, 3178, 0}),
+    KARAMJA_CATCH_50_SALMON("Catch 50 Salmon", "Karamja", "Catch 50 Salmon", new int[]{2924, 3178, 0}),
+    KARAMJA_GET_DURADEL_TASK("Get Duradel Task", "Karamja", "Get slayer task from Duradel", new int[]{2869, 2982, 1}),
+    KARAMJA_RECEIVE_SLAYER_TASK("Receive Slayer Task", "Karamja", "Recieve a Slayer Task", new int[]{2869, 2982, 1}),
+    KARAMJA_EQUIP_SPINY_HELM("Equip Spiny Helm", "Karamja", "Equip spiny helm", null),
+    KARAMJA_CHECK_SLAYER_TASK("Check Slayer Task", "Karamja", "Check your slayer task", null),
+    KARAMJA_FILL_BANANA_CRATE("Fill Banana Crate", "Karamja", "Fill a Crate With Bananas", new int[]{2917, 3159, 0}),
+    KARAMJA_DEFEAT_TZHAAR("Defeat Tzhaar", "Karamja", "Defeat a Tzhaar", new int[]{2480, 5175, 0}),
+    KARAMJA_REACH_10_COMBAT("Reach 10 Combat", "Karamja", "Reach 10 Combat", null),
+    KARAMJA_REACH_TOTAL_100("Reach Total 100", "Karamja", "Reach Total Level 100", null),
+
+    // Varrock Part 2
+    VARROCK_COMPLETE_GERTRUDES_CAT("Complete Gertrude's Cat", "Varrock Part 2", "Complete Gertrude's Cat", new int[]{3150, 3413, 0}),
+    VARROCK_COMPLETE_AGILITY_COURSE("Complete Varrock Agility Course", "Varrock Part 2", "Complete the Varrock Agility Course", new int[]{3221, 3414, 0}),
+    VARROCK_COMPLETE_10_LAPS("Complete 10 Laps", "Varrock Part 2", "Complete 10 Laps of the Varrock Agility Course", new int[]{3221, 3414, 0}),
+    VARROCK_COMPLETE_50_ROOFTOP_LAPS("Complete 50 Rooftop Laps", "Varrock Part 2", "Complete 50 Laps of a Rooftop Agility Course", null),
+    VARROCK_ACHIEVE_LEVEL_40("Achieve Level 40", "Varrock Part 2", "Achieve Your First Level 40", null),
+    VARROCK_ACHIEVE_LEVEL_50("Achieve Level 50", "Varrock Part 2", "Achieve Your First Level 50", null),
+    VARROCK_PICKPOCKET_GUARD("Pickpocket Guard", "Varrock Part 2", "Pickpocket a Guard", new int[]{3222, 3395, 0}),
+    VARROCK_OBTAIN_800_COINS("Obtain 800 Coins", "Varrock Part 2", "Obtain 800 Coins From Coin Pouches At Once", null),
+    VARROCK_SMELT_BRONZE_BAR("Smelt Bronze Bar", "Varrock Part 2", "Smelt a Bronze Bar", new int[]{3229, 3402, 0}),
+    VARROCK_SMITH_BRONZE_HELM("Smith Bronze Full Helm", "Varrock Part 2", "Smith a Bronze full helm", new int[]{3188, 3425, 0}),
+    VARROCK_SMELT_IRON_BAR("Smelt Iron Bar", "Varrock Part 2", "Smelt an Iron Bar", new int[]{3229, 3402, 0}),
+    VARROCK_SMITH_BRONZE_PLATESKIRT("Smith Bronze Plateskirt", "Varrock Part 2", "Smith a Bronze plateskirt", new int[]{3188, 3425, 0}),
+    VARROCK_MINE_50_IRON("Mine 50 Iron Ore", "Varrock Part 2", "Mine 50 Iron Ore", new int[]{3286, 3369, 0}),
+    VARROCK_MINE_15_COAL("Mine 15 Coal", "Varrock Part 2", "Mine 15 coal", new int[]{3147, 3442, 0}),
+    VARROCK_SMELT_STEEL_BAR("Smelt Steel Bar", "Varrock Part 2", "Smelt a Steel Bar", new int[]{3229, 3402, 0}),
+    VARROCK_SMITH_10_STEEL_BOLTS("Smith Steel Bolts", "Varrock Part 2", "Smith 10 Steel bolts (unf)", new int[]{3188, 3425, 0}),
+    VARROCK_SMITH_150_IRON_ARROWTIPS("Smith Iron Arrowtips", "Varrock Part 2", "Smith 150 Iron Arrowtips", new int[]{3188, 3425, 0}),
+    VARROCK_FLETCH_150_IRON_ARROWS("Fletch Iron Arrows", "Varrock Part 2", "Fletch 150 Iron Arrows", null),
+    VARROCK_PAN_FOR_JADE("Pan for Jade", "Varrock Part 2", "Pan for an Uncut Jade", new int[]{3289, 3361, 0}),
+    VARROCK_RESTORE_PRAYER("Restore Prayer Points", "Varrock Part 2", "Restore 5 Prayer Points at an Altar", new int[]{3208, 3495, 0}),
+    VARROCK_REACH_TOTAL_250("Reach Total 250", "Varrock Part 2", "Reach Total Level 250", null);
 
     private final String name;
     private final String area;
